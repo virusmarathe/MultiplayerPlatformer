@@ -1,11 +1,13 @@
 #include "Game.h"
 #include "TextureManager.h"
 #include "GameObject.h"
+#include "Map.h"
 
 #define SDL_ERROR(s) std::cout << s << " SDL Error: " << SDL_GetError() << std::endl
 
 GameObject* m_Player;
 SDL_Renderer* Game::renderer = NULL;
+Map* map;
 
 Game::Game() :mb_isRunning(false), m_Window(NULL)
 {
@@ -35,6 +37,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
 				mb_isRunning = true;
 				m_Player = new GameObject("Assets/player.png", 100, 100, 4);
+				map = new Map();
 			}
 			else
 			{
@@ -74,6 +77,7 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 
+	map->DrawMap();
 	m_Player->Render();
 
 	SDL_RenderPresent(renderer);
