@@ -1,11 +1,12 @@
 #pragma once
+#include "Components.h"
 
-class PositionComponent : public Component
+class TransformComponent : public Component
 {
 public:
 
-	PositionComponent() : xpos(0), ypos(0) {}
-	PositionComponent(float x, float y) : xpos(x), ypos(y) {}
+	TransformComponent() : xpos(0), ypos(0) {}
+	TransformComponent(float x, float y) : xpos(x), ypos(y) {}
 
 	void update(float dt) override
 	{
