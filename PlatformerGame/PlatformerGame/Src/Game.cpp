@@ -43,7 +43,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 			}
 			else
 			{
-				SDL_ERROR("Renderer could not brea created!");
+				SDL_ERROR("Renderer could not be created!");
 			}
 		}
 		else
