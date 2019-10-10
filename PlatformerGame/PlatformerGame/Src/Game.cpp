@@ -38,7 +38,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
 				mb_isRunning = true;
 				map = new Map();
-				m_Player.addComponent<TransformComponent>(50, 50);
+				m_Player.addComponent<TransformComponent>(50.0f, 50.0f);
 				m_Player.addComponent<SpriteComponent>("Assets/player.png");
 			}
 			else
@@ -75,9 +75,11 @@ void Game::update(float dt)
 	manager.refresh();
 	manager.update(dt);
 
-	if (m_Player.getComponent<TransformComponent>().x() >= 300)
+	m_Player.getComponent<TransformComponent>().position.y += dt * 0.5f;
+
+	if (m_Player.getComponent<TransformComponent>().position.y >= 800)
 	{
-		m_Player.getComponent<TransformComponent>().x(0);
+		m_Player.getComponent<TransformComponent>().position.y = 0;
 	}
 }
 

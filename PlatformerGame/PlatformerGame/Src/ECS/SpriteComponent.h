@@ -26,7 +26,7 @@ public:
 
 	void init() override
 	{
-		position = &entity->getComponent<TransformComponent>();
+		transform = &entity->getComponent<TransformComponent>();
 
 		srcRect.x = srcRect.y = 0;
 		srcRect.w = srcRect.h = 32;
@@ -35,8 +35,8 @@ public:
 
 	void update(float dt) override
 	{
-		dstRect.x = (int)position->x();
-		dstRect.y = (int)position->y();
+		dstRect.x = (int)transform->position.x;
+		dstRect.y = (int)transform->position.y;
 	}
 
 	void draw() override
@@ -45,7 +45,7 @@ public:
 	}
 
 private:
-	TransformComponent* position;
+	TransformComponent* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, dstRect;
 };
