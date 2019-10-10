@@ -24,20 +24,24 @@ Vector2D& Vector2D::Subtract(const Vector2D& vec)
 	return *this;
 }
 
-Vector2D& Vector2D::Multiply(const float val)
+Vector2D& Vector2D::normalize()
 {
-	this->x *= val;
-	this->y *= val;
-
+	float magn = mag();
+	if (magn > 0)
+	{
+		(*this) /= magn;
+	}
 	return *this;
 }
 
-Vector2D& Vector2D::Divide(const float val)
+float Vector2D::mag()
 {
-	this->x /= val;
-	this->y /= val;
+	return sqrt(magSqr());
+}
 
-	return *this;
+float Vector2D::magSqr()
+{
+	return ((this->x * this->x) + (this->y * this->y));
 }
 
 Vector2D& Vector2D::operator+=(const Vector2D& vec)
@@ -52,12 +56,16 @@ Vector2D& Vector2D::operator-=(const Vector2D& vec)
 
 Vector2D& Vector2D::operator*=(const float val)
 {
-	return this->Multiply(val);
+	this->x *= val;
+	this->y *= val;
+	return *this;
 }
 
 Vector2D& Vector2D::operator/=(const float val)
 {
-	return this->Divide(val);
+	this->x /= val;
+	this->y /= val;
+	return *this;
 }
 
 Vector2D& operator+(Vector2D& v1, const Vector2D& v2)
@@ -70,14 +78,16 @@ Vector2D& operator-(Vector2D& v1, const Vector2D& v2)
 	return v1.Subtract(v2);
 }
 
-Vector2D& operator*(Vector2D& v1, const float val)
+Vector2D operator*(Vector2D& v1, const float val)
 {
-	return v1.Multiply(val);
+	Vector2D mult(v1.x * val, v1.y * val);
+	return mult;
 }
 
-Vector2D& operator/(Vector2D& v1, const float val)
+Vector2D operator/(Vector2D& v1, const float val)
 {
-	return v1.Divide(val);
+	Vector2D divide(v1.x / val, v1.y / val);
+	return divide;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Vector2D& vec)

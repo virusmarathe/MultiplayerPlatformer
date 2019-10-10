@@ -6,6 +6,8 @@
 #define SDL_ERROR(s) std::cout << s << " SDL Error: " << SDL_GetError() << std::endl
 
 SDL_Renderer* Game::renderer = NULL;
+SDL_Event Game::event;
+
 Map* map;
 EntityManager manager;
 auto& m_Player(manager.addEntity());
@@ -40,6 +42,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				map = new Map();
 				m_Player.addComponent<TransformComponent>(50.0f, 50.0f);
 				m_Player.addComponent<SpriteComponent>("Assets/player.png");
+				m_Player.addComponent<KeyboardController>();
 			}
 			else
 			{
@@ -59,7 +62,6 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 
 void Game::handleEvents()
 {
-	SDL_Event event;
 	if (SDL_PollEvent(&event) != 0)
 	{
 		switch (event.type)
@@ -74,13 +76,6 @@ void Game::update(float dt)
 {
 	manager.refresh();
 	manager.update(dt);
-
-	m_Player.getComponent<TransformComponent>().position.y += dt * 0.5f;
-
-	if (m_Player.getComponent<TransformComponent>().position.y >= 800)
-	{
-		m_Player.getComponent<TransformComponent>().position.y = 0;
-	}
 }
 
 void Game::render()

@@ -18,6 +18,7 @@ public:
 	bool running() { return mb_isRunning; }
 
 	static SDL_Renderer* renderer;
+	static SDL_Event event;
 private:
 
 	bool mb_isRunning;
