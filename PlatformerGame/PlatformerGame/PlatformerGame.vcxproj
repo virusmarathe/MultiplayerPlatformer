@@ -19,15 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\ECS\Components.h" />
     <ClInclude Include="Src\ECS\ECS.h" />
+    <ClInclude Include="Src\ECS\PositionComponent.h" />
+    <ClInclude Include="Src\ECS\SpriteComponent.h" />
     <ClInclude Include="Src\Game.h" />
-    <ClInclude Include="Src\GameObject.h" />
     <ClInclude Include="Src\Map.h" />
     <ClInclude Include="Src\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Game.cpp" />
-    <ClCompile Include="Src\GameObject.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Map.cpp" />
     <ClCompile Include="Src\TextureManager.cpp" />

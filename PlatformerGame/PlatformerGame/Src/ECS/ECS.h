@@ -36,7 +36,7 @@ public:
 	Entity* entity;
 
 	virtual void init() {}
-	virtual void update() {}
+	virtual void update(float dt) {}
 	virtual void draw() {}
 
 	virtual ~Component() {}
@@ -46,9 +46,9 @@ public:
 class Entity
 {
 public:
-	void update() 
+	void update(float dt)
 	{
-		for (auto& c : components) c->update();
+		for (auto& c : components) c->update(dt);
 	}
 
 	void draw()
@@ -101,9 +101,9 @@ private:
 class EntityManager
 {
 public:
-	void update()
+	void update(float dt)
 	{
-		for (auto& e : entities) { e->update(); }
+		for (auto& e : entities) { e->update(dt); }
 	}
 	void draw()
 	{
@@ -125,6 +125,8 @@ public:
 		Entity* e = new Entity();
 		std::unique_ptr<Entity> uPtr{ e };
 		entities.emplace_back(std::move(uPtr));
+
+		return *e;
 	}
 private:
 	std::vector<std::unique_ptr<Entity>> entities;

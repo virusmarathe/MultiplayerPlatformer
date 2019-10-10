@@ -1,13 +1,14 @@
 #include "Game.h"
 #include "TextureManager.h"
-#include "GameObject.h"
 #include "Map.h"
+#include "ECS/Components.h"
 
 #define SDL_ERROR(s) std::cout << s << " SDL Error: " << SDL_GetError() << std::endl
 
-GameObject* m_Player;
 SDL_Renderer* Game::renderer = NULL;
 Map* map;
+EntityManager manager;
+auto& m_Player(manager.addEntity());
 
 Game::Game() :mb_isRunning(false), m_Window(NULL)
 {
@@ -36,8 +37,9 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 			{
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
 				mb_isRunning = true;
-				m_Player = new GameObject("Assets/player.png", 100, 100, 4);
 				map = new Map();
+				m_Player.addComponent<PositionComponent>(50, 50);
+				m_Player.addComponent<SpriteComponent>("Assets/player.png");
 			}
 			else
 			{
@@ -70,7 +72,13 @@ void Game::handleEvents()
 
 void Game::update(float dt)
 {
-	m_Player->Update(dt);
+	manager.refresh();
+	manager.update(dt);
+
+	if (m_Player.getComponent<PositionComponent>().x() >= 300)
+	{
+		m_Player.getComponent<PositionComponent>().x(0);
+	}
 }
 
 void Game::render()
@@ -78,15 +86,13 @@ void Game::render()
 	SDL_RenderClear(renderer);
 
 	map->DrawMap();
-	m_Player->Render();
+	manager.draw();
 
 	SDL_RenderPresent(renderer);
 }
 
 void Game::clean()
 {
-	delete m_Player;
-	m_Player = NULL;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
