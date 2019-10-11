@@ -40,7 +40,7 @@ public:
 	Entity* entity;
 
 	virtual void init() {}
-	virtual void update(float dt) {}
+	virtual void update() {}
 	virtual void draw() {}
 
 	virtual ~Component() {}
@@ -52,9 +52,9 @@ class Entity
 public:
 
 	Entity(EntityManager& man) : manager(man) {}
-	void update(float dt)
+	void update()
 	{
-		for (auto& c : components) c->update(dt);
+		for (auto& c : components) c->update();
 	}
 
 	void draw()
@@ -121,9 +121,9 @@ private:
 class EntityManager
 {
 public:
-	void update(float dt)
+	void update()
 	{
-		for (auto& e : entities) { e->update(dt); }
+		for (auto& e : entities) { e->update(); }
 	}
 	void draw()
 	{

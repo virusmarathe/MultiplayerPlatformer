@@ -5,20 +5,27 @@ Game* game = NULL;
 
 int main(int argc, char* args[])
 {
-	Uint32 frameTime = 0;
-	Uint32 prevFrameTime = 0;
-	float deltaTime = 0;
+	const int FPS = 60;
+	const int frameDelay = 1000 / FPS;
+
+	Uint32 frameStart;
+	int frameTime;
+
 	game = new Game();
 	game->init("test", 50, 50, 1280, 960, false);
 
 	while (game->running())
 	{
-		frameTime = SDL_GetTicks();
-		deltaTime = frameTime - prevFrameTime;
+		frameStart = SDL_GetTicks();
 		game->handleEvents();
-		game->update(deltaTime);
+		game->update();
 		game->render();
-		prevFrameTime = frameTime;
+
+		frameTime = SDL_GetTicks() - frameStart;
+		if (frameDelay > frameTime)
+		{
+			SDL_Delay(frameDelay - frameTime);
+		}
 	}
 
 	delete game;

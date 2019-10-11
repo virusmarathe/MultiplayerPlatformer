@@ -44,7 +44,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 		m_Window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
 		if (m_Window)
 		{
-			renderer = SDL_CreateRenderer(m_Window, -1, 0);
+			renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
 			if (renderer)
 			{
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
@@ -85,10 +85,10 @@ void Game::handleEvents()
 	}
 }
 
-void Game::update(float dt)
+void Game::update()
 {
 	manager.refresh();
-	manager.update(dt);
+	manager.update();
 
 	for (auto col : colliders)
 	{

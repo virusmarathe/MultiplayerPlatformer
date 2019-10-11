@@ -12,7 +12,7 @@ public:
 		transform = &entity->getComponent<TransformComponent>();
 	}
 
-	void update(float dt) override
+	void update() override
 	{
 		const Uint8* state = SDL_GetKeyboardState(NULL);
 		if (state[SDL_SCANCODE_W]) y = -1.0f;
@@ -23,10 +23,11 @@ public:
 		if (!state[SDL_SCANCODE_W] && !state[SDL_SCANCODE_S]) y = 0;
 		if (!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D]) x = 0;
 
-		transform->velocity = Vector2D(x, y).normalize();
+		transform->velocity = Vector2D(x, y).normalize() * speed;
 	}
 
 	TransformComponent* transform;
 	float x = 0;
 	float y = 0;
+	float speed = 5.0f;
 };

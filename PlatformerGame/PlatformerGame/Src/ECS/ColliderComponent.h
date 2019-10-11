@@ -21,7 +21,7 @@ public:
 		Game::colliders.push_back(this);
 	}
 
-	void update(float dt) override
+	void update() override
 	{
 		collider.x = (int)transform->position.x;
 		collider.y = (int)transform->position.y;

@@ -38,7 +38,7 @@ public:
 		srcRect.h = transform->height;
 	}
 
-	void update(float dt) override
+	void update() override
 	{
 		dstRect.x = (int)transform->position.x;
 		dstRect.y = (int)transform->position.y;

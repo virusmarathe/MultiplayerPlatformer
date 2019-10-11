@@ -16,15 +16,14 @@ public:
 		velocity.Zero();
 	}
 
-	void update(float dt) override
+	void update() override
 	{
-		position += (velocity * (dt * speed));
+		position += (velocity);
 	}
 
 	Vector2D position;
 	Vector2D velocity;
 
-	float speed = 0.5f;
 	int height = 32;
 	int width = 32;
 	int scale = 1;
