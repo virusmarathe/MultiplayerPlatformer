@@ -68,6 +68,14 @@ Vector2D& Vector2D::operator/=(const float val)
 	return *this;
 }
 
+Vector2D& Vector2D::Zero()
+{
+	this->x = 0;
+	this->y = 0;
+
+	return *this;
+}
+
 Vector2D& operator+(Vector2D& v1, const Vector2D& v2)
 {
 	return v1.Add(v2);

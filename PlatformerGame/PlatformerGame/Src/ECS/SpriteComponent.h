@@ -2,6 +2,7 @@
 
 #include "Components.h"
 #include <SDL.h>
+#include "../TextureManager.h"
 
 class SpriteComponent : public Component
 {
@@ -26,17 +27,23 @@ public:
 
 	void init() override
 	{
+		if (!entity->hasComponent<TransformComponent>())
+		{
+			entity->addComponent<TransformComponent>();
+		}
 		transform = &entity->getComponent<TransformComponent>();
 
 		srcRect.x = srcRect.y = 0;
-		srcRect.w = srcRect.h = 32;
-		dstRect.w = dstRect.h = 64;
+		srcRect.w = transform->width;
+		srcRect.h = transform->height;
 	}
 
 	void update(float dt) override
 	{
 		dstRect.x = (int)transform->position.x;
 		dstRect.y = (int)transform->position.y;
+		dstRect.w = transform->width * transform->scale;
+		dstRect.h = transform->height * transform->scale;
 	}
 
 	void draw() override

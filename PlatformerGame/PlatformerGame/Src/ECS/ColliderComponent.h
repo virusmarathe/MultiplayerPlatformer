@@ -1,0 +1,35 @@
+#pragma once
+
+#include <string>
+#include <SDL.h>
+#include "Components.h"
+
+class ColliderComponent : public Component
+{
+public:
+
+	ColliderComponent(std::string s) : tag(s) {}
+
+	void init() override
+	{
+		if (!entity->hasComponent<TransformComponent>())
+		{
+			entity->addComponent<TransformComponent>();
+		}
+		transform = &entity->getComponent<TransformComponent>();
+
+		Game::colliders.push_back(this);
+	}
+
+	void update(float dt) override
+	{
+		collider.x = (int)transform->position.x;
+		collider.y = (int)transform->position.y;
+		collider.w = transform->width * transform->scale;
+		collider.h = transform->height * transform->scale;
+	}
+
+	SDL_Rect collider;
+	std::string tag;
+	TransformComponent* transform;
+};

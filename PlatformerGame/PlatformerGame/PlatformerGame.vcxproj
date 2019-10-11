@@ -19,9 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Collision.h" />
+    <ClInclude Include="Src\ECS\ColliderComponent.h" />
     <ClInclude Include="Src\ECS\Components.h" />
     <ClInclude Include="Src\ECS\ECS.h" />
     <ClInclude Include="Src\ECS\KeyboardController.h" />
+    <ClInclude Include="Src\ECS\TileComponent.h" />
     <ClInclude Include="Src\ECS\TransformComponent.h" />
     <ClInclude Include="Src\ECS\SpriteComponent.h" />
     <ClInclude Include="Src\Game.h" />
@@ -30,6 +33,8 @@
     <ClInclude Include="Src\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Collision.cpp" />
+    <ClCompile Include="Src\ECS\ECS.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Map.cpp" />

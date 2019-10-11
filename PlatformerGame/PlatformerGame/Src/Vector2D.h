@@ -23,6 +23,8 @@ struct Vector2D
 	Vector2D& operator*=(const float val);
 	Vector2D& operator/=(const float val);
 
+	Vector2D& Zero();
+
 	friend std::ostream& operator<<(std::ostream& stream, const Vector2D& vec);
 
 	float x;
