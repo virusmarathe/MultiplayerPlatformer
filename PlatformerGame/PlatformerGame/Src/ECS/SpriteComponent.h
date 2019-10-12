@@ -8,8 +8,9 @@ class SpriteComponent : public Component
 {
 public:
 	SpriteComponent() = default;
-	SpriteComponent(const char* path)
+	SpriteComponent(const char* path, bool isAnimated = false)
 	{
+		animated = isAnimated;
 		setTexture(path);
 	}
 
@@ -27,6 +28,14 @@ public:
 
 	void init() override
 	{
+		if (animated)
+		{
+			if (!entity->hasComponent<AnimationComponent>())
+			{
+				entity->addComponent<AnimationComponent>();
+			}
+			animator = &entity->getComponent<AnimationComponent>();
+		}
 		if (!entity->hasComponent<TransformComponent>())
 		{
 			entity->addComponent<TransformComponent>();
@@ -40,6 +49,12 @@ public:
 
 	void update() override
 	{
+		if (animated)
+		{
+			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / animator->timePerFrame) % animator->frames);
+			srcRect.y = animator->animIndex * transform->height;
+		}
+
 		dstRect.x = (int)transform->position.x;
 		dstRect.y = (int)transform->position.y;
 		dstRect.w = transform->width * transform->scale;
@@ -48,11 +63,16 @@ public:
 
 	void draw() override
 	{
-		TextureManager::Draw(texture, srcRect, dstRect);
+		TextureManager::Draw(texture, srcRect, dstRect, spriteFlip);
 	}
+
+public:
+	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
 private:
 	TransformComponent* transform;
+	AnimationComponent* animator;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, dstRect;
+	bool animated = false;
 };

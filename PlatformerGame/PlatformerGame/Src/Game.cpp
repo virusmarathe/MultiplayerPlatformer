@@ -12,6 +12,14 @@ SDL_Event Game::event;
 Map* map;
 EntityManager manager;
 auto& m_Player(manager.addEntity());
+Animation idle = Animation(0, 3, 100);
+Animation walk = Animation(1, 8, 100);
+
+enum PlayerAnims
+{
+	IDLE,
+	WALK
+};
 
 std::vector<ColliderComponent*> Game::colliders;
 
@@ -52,10 +60,13 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				map = new Map();
 				Map::LoadMap("Assets/testmap1024.map", 32, 32);
 				m_Player.addComponent<TransformComponent>(50.0f, 50.0f, 2);
-				m_Player.addComponent<SpriteComponent>("Assets/player.png");
+				m_Player.addComponent<SpriteComponent>("Assets/player_anims.png", true);
 				m_Player.addComponent<KeyboardController>();
 				m_Player.addComponent<ColliderComponent>("player");
 				m_Player.addGroup(groupLabels::LAYER_PLAYER);
+				m_Player.getComponent<AnimationComponent>().AddAnimation(IDLE, &idle);
+				m_Player.getComponent<AnimationComponent>().AddAnimation(WALK, &walk);
+				m_Player.getComponent<AnimationComponent>().play(IDLE);
 			}
 			else
 			{
@@ -89,6 +100,24 @@ void Game::update()
 {
 	manager.refresh();
 	manager.update();
+
+	if (m_Player.getComponent<TransformComponent>().velocity.x < 0)
+	{
+		m_Player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
+	}
+	else
+	{
+		m_Player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
+	}
+
+	if (m_Player.getComponent<TransformComponent>().velocity.x != 0 || m_Player.getComponent<TransformComponent>().velocity.y != 0)
+	{
+		m_Player.getComponent<AnimationComponent>().play(WALK);
+	}
+	else
+	{
+		m_Player.getComponent<AnimationComponent>().play(IDLE);
+	}
 
 	for (auto col : colliders)
 	{
