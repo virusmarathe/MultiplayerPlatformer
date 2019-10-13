@@ -4,7 +4,8 @@ namespace Config
 {
 	// map settings
 	extern const int TILE_SIZE;
-	extern const char* TILEMAP_FILE;
+	extern const char* TILEMAP_FILENAME;
+	extern const char* LEVEL0_MAP_FILENAME;
 	extern const int MAP_SCALE;
 
 	// player settings

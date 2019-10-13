@@ -23,15 +23,7 @@ enum PlayerAnims
 	WALK
 };
 
-std::vector<ColliderComponent*> Game::colliders;
 SDL_Rect Game::camera = { 0,0, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT };
-
-enum groupLabels : std::size_t
-{
-	LAYER_MAP,
-	LAYER_PLAYER,
-	LAYER_ENEMY
-};
 
 Game::Game() :mb_isRunning(false), m_Window(NULL)
 {
@@ -60,12 +52,10 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 			{
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
 				mb_isRunning = true;
-				map = new Map();
-				int mapWidth = 80;
-				int mapHeight = 30;
-				Map::LoadMap("Assets/level0.map");
-				cameraBoundX = (mapWidth * Config::TILE_SIZE * Config::MAP_SCALE) - camera.w;
-				cameraBoundY = (mapHeight * Config::TILE_SIZE * Config::MAP_SCALE) - camera.h;
+				map = new Map(Config::TILEMAP_FILENAME);
+				map->LoadMap(Config::LEVEL0_MAP_FILENAME);
+				cameraBoundX = (map->width * Config::TILE_SIZE * Config::MAP_SCALE) - camera.w;
+				cameraBoundY = (map->height * Config::TILE_SIZE * Config::MAP_SCALE) - camera.h;
 				m_Player.addComponent<TransformComponent>(200.0f, 1500.0f, 4);
 				m_Player.addComponent<SpriteComponent>("Assets/player_anims.png", true);
 				m_Player.addComponent<KeyboardController>();
@@ -126,16 +116,8 @@ void Game::update()
 		m_Player.getComponent<AnimationComponent>().play(IDLE);
 	}
 
-	for (auto col : colliders)
-	{
-		if (Collision::AABB(m_Player.getComponent<ColliderComponent>(), *col))
-		{
-			//m_Player.getComponent<TransformComponent>().velocity *= -1.f;
-		}
-	}
-
-	camera.x = m_Player.getComponent<TransformComponent>().position.x - (camera.w / 4);
-	camera.y = m_Player.getComponent<TransformComponent>().position.y - (camera.h / 2);
+	camera.x = (int)(m_Player.getComponent<TransformComponent>().position.x) - (camera.w / 4);
+	camera.y = (int)(m_Player.getComponent<TransformComponent>().position.y) - (camera.h / 2);
 
 	if (camera.x < 0) camera.x = 0;
 	if (camera.y < 0) camera.y = 0;
@@ -143,9 +125,9 @@ void Game::update()
 	if (camera.y > cameraBoundY) camera.y = cameraBoundY;
 }
 
-auto& tiles(manager.getGroup(LAYER_MAP));
-auto& players(manager.getGroup(LAYER_PLAYER));
-auto& enemies(manager.getGroup(LAYER_ENEMY));
+auto& tiles(manager.getGroup(Game::LAYER_MAP));
+auto& players(manager.getGroup(Game::LAYER_PLAYER));
+auto& enemies(manager.getGroup(Game::LAYER_ENEMY));
 
 void Game::render()
 {
@@ -175,11 +157,4 @@ void Game::clean()
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 	std::cout << "Game cleaned." << std::endl;
-}
-
-void Game::AddTile(int srcX, int srcY, int xpos, int ypos)
-{
-	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, Config::TILEMAP_FILE);
-	tile.addGroup(groupLabels::LAYER_MAP);
 }

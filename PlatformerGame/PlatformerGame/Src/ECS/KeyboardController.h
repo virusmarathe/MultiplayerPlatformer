@@ -30,5 +30,5 @@ public:
 	TransformComponent* transform;
 	float x = 0;
 	float y = 0;
-	float speed;
+	float speed = 1;
 };

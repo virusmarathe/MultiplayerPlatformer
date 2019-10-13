@@ -14,8 +14,8 @@ public:
 	{
 		texture = TextureManager::LoadTexture(tileMap);
 
-		position.x = xpos;
-		position.y = ypos;
+		position.x = (float)xpos;
+		position.y = (float)ypos;
 
 		srcRect.x = srcX;
 		srcRect.y = srcY;
@@ -38,8 +38,8 @@ public:
 
 	void update() override
 	{
-		dstRect.x = position.x - Game::camera.x;
-		dstRect.y = position.y - Game::camera.y;
+		dstRect.x = (int)position.x - Game::camera.x;
+		dstRect.y = (int)position.y - Game::camera.y;
 	}
 
 public:

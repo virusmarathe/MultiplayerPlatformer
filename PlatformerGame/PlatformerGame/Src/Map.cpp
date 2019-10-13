@@ -3,8 +3,12 @@
 #include <fstream>
 #include "Config.h"
 #include <string>
+#include "ECS/ECS.h"
+#include "ECS/Components.h"
 
-Map::Map()
+extern EntityManager manager;
+
+Map::Map(const char* path) : tileMapPath(path), width(0), height(0)
 {
 }
 
@@ -15,7 +19,6 @@ Map::~Map()
 
 void Map::LoadMap(std::string path)
 {
-	char c;
 	std::fstream mapFile;
 	mapFile.open(path);
 
@@ -35,11 +38,14 @@ void Map::LoadMap(std::string path)
 	mapFile.getline(line, 32);
 	mapFile.getline(line, 32);
 	mapFile.getline(line, 32);
-	int xPos, yPos;
-	yPos = 0;
+	int xPos;
+	int mapMultiplier = Config::TILE_SIZE * Config::MAP_SCALE;
+	width = sizeX;
+	height = sizeY;
 
-	while (mapFile.getline(line, 256))
+	for (int yPos = 0; yPos < sizeY; yPos++)
 	{
+		mapFile.getline(line, 256);
 		xPos = 0;
 		word = strtok_s(line, ",", &next_token);
 		while (word != NULL)
@@ -47,13 +53,37 @@ void Map::LoadMap(std::string path)
 			int val = atoi(word);
 			srcX = val % 10 * Config::TILE_SIZE;
 			srcY = val / 10 * Config::TILE_SIZE;
-			Game::AddTile(srcX, srcY, xPos * Config::TILE_SIZE * Config::MAP_SCALE, yPos * Config::TILE_SIZE * Config::MAP_SCALE);
+			AddTile(srcX, srcY, xPos * mapMultiplier, yPos * mapMultiplier);
 			xPos++;
 			word = strtok_s(NULL, ",", &next_token);
 		}
-		yPos++;
-		if (yPos >= sizeY) break;
+	}
+	mapFile.getline(line, 32);
+	mapFile.getline(line, 32);
+	for (int yPos = 0; yPos < sizeY; yPos++)
+	{
+		mapFile.getline(line, 256);
+		xPos = 0;
+		word = strtok_s(line, ",", &next_token);
+		while (word != NULL)
+		{
+			int val = atoi(word);
+			if (val != -1)
+			{
+				//auto& col(manager.addEntity());
+				//col.addComponent<ColliderComponent>("terrain", xPos * mapMultiplier, yPos * mapMultiplier);
+			}
+			xPos++;
+			word = strtok_s(NULL, ",", &next_token);
+		}
 	}
 
 	mapFile.close();
+}
+
+void Map::AddTile(int srcX, int srcY, int xpos, int ypos)
+{
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileMapPath);
+	tile.addGroup(Game::LAYER_MAP);
 }
