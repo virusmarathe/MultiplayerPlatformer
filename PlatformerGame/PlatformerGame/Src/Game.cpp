@@ -61,12 +61,12 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				SDL_SetRenderDrawColor(renderer, 71, 142, 181, 0xFF);
 				mb_isRunning = true;
 				map = new Map();
-				int mapWidth = 25;
-				int mapHeight = 20;
-				Map::LoadMap("Assets/map.map", mapWidth, mapHeight);
+				int mapWidth = 80;
+				int mapHeight = 30;
+				Map::LoadMap("Assets/level0.map");
 				cameraBoundX = (mapWidth * Config::TILE_SIZE * Config::MAP_SCALE) - camera.w;
 				cameraBoundY = (mapHeight * Config::TILE_SIZE * Config::MAP_SCALE) - camera.h;
-				m_Player.addComponent<TransformComponent>(50.0f, 50.0f, 4);
+				m_Player.addComponent<TransformComponent>(200.0f, 1500.0f, 4);
 				m_Player.addComponent<SpriteComponent>("Assets/player_anims.png", true);
 				m_Player.addComponent<KeyboardController>();
 				m_Player.addComponent<ColliderComponent>("player");
@@ -134,7 +134,7 @@ void Game::update()
 		}
 	}
 
-	camera.x = m_Player.getComponent<TransformComponent>().position.x - (camera.w / 2);
+	camera.x = m_Player.getComponent<TransformComponent>().position.x - (camera.w / 4);
 	camera.y = m_Player.getComponent<TransformComponent>().position.y - (camera.h / 2);
 
 	if (camera.x < 0) camera.x = 0;

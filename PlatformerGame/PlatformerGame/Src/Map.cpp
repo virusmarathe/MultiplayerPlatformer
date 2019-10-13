@@ -2,6 +2,7 @@
 #include "Game.h"
 #include <fstream>
 #include "Config.h"
+#include <string>
 
 Map::Map()
 {
@@ -12,27 +13,46 @@ Map::~Map()
 
 }
 
-void Map::LoadMap(std::string path, int sizeX, int sizeY)
+void Map::LoadMap(std::string path)
 {
 	char c;
 	std::fstream mapFile;
 	mapFile.open(path);
 
 	int srcX, srcY;
+	char line[256] = "";
+	char* word;
+	char* next_token = NULL;
+	mapFile.getline(line, 32);
+	word = strtok_s(line, " ", &next_token);
+	word = strtok_s(NULL, " ", &next_token);
+	int sizeX = atoi(word);
+	mapFile.getline(line, 32);
+	word = strtok_s(line, " ", &next_token);
+	word = strtok_s(NULL, " ", &next_token);
+	int sizeY = atoi(word);
+	mapFile.getline(line, 32);
+	mapFile.getline(line, 32);
+	mapFile.getline(line, 32);
+	mapFile.getline(line, 32);
+	int xPos, yPos;
+	yPos = 0;
 
-	for (int y = 0; y < sizeY; y++)
+	while (mapFile.getline(line, 256))
 	{
-		for (int x = 0; x < sizeX; x++)
+		xPos = 0;
+		word = strtok_s(line, ",", &next_token);
+		while (word != NULL)
 		{
-			// example if next tile index is "21", 2 is y index, 1 is x index
-			// could refactor to read in based on commas, and then calculate the position in tilemap based on width
-			mapFile.get(c); 
-			srcY = atoi(&c) * Config::TILE_SIZE;
-			mapFile.get(c);
-			srcX = atoi(&c) * Config::TILE_SIZE;
-			Game::AddTile(srcX, srcY, x * Config::TILE_SIZE * Config::MAP_SCALE, y * Config::TILE_SIZE * Config::MAP_SCALE);
-			mapFile.ignore();
+			int val = atoi(word);
+			srcX = val % 10 * Config::TILE_SIZE;
+			srcY = val / 10 * Config::TILE_SIZE;
+			Game::AddTile(srcX, srcY, xPos * Config::TILE_SIZE * Config::MAP_SCALE, yPos * Config::TILE_SIZE * Config::MAP_SCALE);
+			xPos++;
+			word = strtok_s(NULL, ",", &next_token);
 		}
+		yPos++;
+		if (yPos >= sizeY) break;
 	}
 
 	mapFile.close();
