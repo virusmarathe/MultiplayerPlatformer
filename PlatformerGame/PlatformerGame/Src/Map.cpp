@@ -70,8 +70,9 @@ void Map::LoadMap(std::string path)
 			int val = atoi(word);
 			if (val != -1)
 			{
-				//auto& col(manager.addEntity());
-				//col.addComponent<ColliderComponent>("terrain", xPos * mapMultiplier, yPos * mapMultiplier);
+				auto& col(manager.addEntity());
+				col.addComponent<ColliderComponent>("terrain", xPos * mapMultiplier, yPos * mapMultiplier);
+				col.addGroup(Game::LAYER_COLLIDERS);
 			}
 			xPos++;
 			word = strtok_s(NULL, ",", &next_token);

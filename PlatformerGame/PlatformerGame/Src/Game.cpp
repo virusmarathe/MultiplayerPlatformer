@@ -17,6 +17,10 @@ Animation walk = Animation(1, 8, 100);
 int cameraBoundX = 300;
 int cameraBoundY = 200;
 
+auto& tiles(manager.getGroup(Game::LAYER_MAP));
+auto& players(manager.getGroup(Game::LAYER_PLAYER));
+auto& colliders(manager.getGroup(Game::LAYER_COLLIDERS));
+
 enum PlayerAnims
 {
 	IDLE,
@@ -56,7 +60,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				map->LoadMap(Config::LEVEL0_MAP_FILENAME);
 				cameraBoundX = (map->width * Config::TILE_SIZE * Config::MAP_SCALE) - camera.w;
 				cameraBoundY = (map->height * Config::TILE_SIZE * Config::MAP_SCALE) - camera.h;
-				m_Player.addComponent<TransformComponent>(200.0f, 1500.0f, 4);
+				m_Player.addComponent<TransformComponent>(200.0f, 1400.0f, 4);
 				m_Player.addComponent<SpriteComponent>("Assets/player_anims.png", true);
 				m_Player.addComponent<KeyboardController>();
 				m_Player.addComponent<ColliderComponent>("player");
@@ -95,10 +99,17 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	SDL_Rect playerCol = m_Player.getComponent<ColliderComponent>().collider;
+	Vector2D playerPos = m_Player.getComponent<TransformComponent>().position;
+
 	manager.refresh();
 	manager.update();
 
-	if (m_Player.getComponent<TransformComponent>().velocity.x < 0)
+	Vector2D playerVel = m_Player.getComponent<TransformComponent>().velocity;
+	playerCol.x += playerVel.x;
+	playerCol.y += playerVel.y;
+
+	if (playerVel.x < 0)
 	{
 		m_Player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
 	}
@@ -107,13 +118,22 @@ void Game::update()
 		m_Player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
 	}
 
-	if (m_Player.getComponent<TransformComponent>().velocity.x != 0 || m_Player.getComponent<TransformComponent>().velocity.y != 0)
+	if (playerVel.x != 0 || playerVel.y != 0)
 	{
 		m_Player.getComponent<AnimationComponent>().play(WALK);
 	}
 	else
 	{
 		m_Player.getComponent<AnimationComponent>().play(IDLE);
+	}
+
+	for (auto& c : colliders)
+	{
+		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
+		if (Collision::AABB(cCol, playerCol))
+		{
+			m_Player.getComponent<TransformComponent>().position = playerPos;
+		}
 	}
 
 	camera.x = (int)(m_Player.getComponent<TransformComponent>().position.x) - (camera.w / 4);
@@ -125,10 +145,6 @@ void Game::update()
 	if (camera.y > cameraBoundY) camera.y = cameraBoundY;
 }
 
-auto& tiles(manager.getGroup(Game::LAYER_MAP));
-auto& players(manager.getGroup(Game::LAYER_PLAYER));
-auto& enemies(manager.getGroup(Game::LAYER_ENEMY));
-
 void Game::render()
 {
 	SDL_RenderClear(renderer);
@@ -137,14 +153,14 @@ void Game::render()
 		t->draw();
 	}
 
+	/*for (auto& c : colliders)
+	{
+		c->draw();
+	}*/
+
 	for (auto& p : players)
 	{
 		p->draw();
-	}
-
-	for (auto& e : enemies)
-	{
-		e->draw();
 	}
 
 	SDL_RenderPresent(renderer);

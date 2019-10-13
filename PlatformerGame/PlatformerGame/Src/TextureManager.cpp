@@ -1,9 +1,21 @@
 #include "TextureManager.h"
 
+std::map<const char*, SDL_Texture*> TextureManager::m_CachedTex;
+
 SDL_Texture* TextureManager::LoadTexture(const char* fileName)
 {
 	SDL_Surface* tmpSurface = IMG_Load(fileName);
-	SDL_Texture* tex = SDL_CreateTextureFromSurface(Game::renderer, tmpSurface);
+	SDL_Texture* tex;
+	if (m_CachedTex.find(fileName) != m_CachedTex.end())
+	{
+		tex = m_CachedTex[fileName];
+	}
+	else
+	{
+		tex = SDL_CreateTextureFromSurface(Game::renderer, tmpSurface);
+		m_CachedTex[fileName] = tex;
+	}
+
 	SDL_FreeSurface(tmpSurface);
 
 	return tex;

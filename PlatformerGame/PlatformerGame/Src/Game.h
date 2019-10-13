@@ -29,7 +29,7 @@ public:
 	{
 		LAYER_MAP,
 		LAYER_PLAYER,
-		LAYER_ENEMY
+		LAYER_COLLIDERS
 	};
 
 private:
