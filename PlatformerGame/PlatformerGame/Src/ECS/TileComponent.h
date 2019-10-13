@@ -1,10 +1,8 @@
 #pragma once
 
 #include "ECS.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
 #include <SDL.h>
-#include "../TextureManager.h"
+#include "../Config.h"
 
 class TileComponent : public Component
 {
@@ -12,38 +10,40 @@ public:
 
 	TileComponent() = default;
 
-	TileComponent(int x, int y, int w, int h, int id)
+	TileComponent(int srcX, int srcY, int xpos, int ypos, const char * tileMap)
 	{
-		tileRect.x = x;
-		tileRect.y = y;
-		tileRect.w = w;
-		tileRect.h = h;
-		tileID = id;
+		texture = TextureManager::LoadTexture(tileMap);
+
+		position.x = xpos;
+		position.y = ypos;
+
+		srcRect.x = srcX;
+		srcRect.y = srcY;
+		srcRect.w = srcRect.h = Config::TILE_SIZE;
+
+		dstRect.x = xpos;
+		dstRect.y = ypos;
+		dstRect.w = dstRect.h = Config::TILE_SIZE * Config::MAP_SCALE;
 	}
 
-	void init() override
+	~TileComponent()
 	{
-		if (!entity->hasComponent<TransformComponent>())
-		{
-			entity->addComponent<TransformComponent>(tileRect.x, tileRect.y, tileRect.w, tileRect.h, 1);
-		}
-		transform = &entity->getComponent<TransformComponent>();
-
-		if (!entity->hasComponent<SpriteComponent>())
-		{
-			entity->addComponent<SpriteComponent>(tileAssets[tileID]);
-		}
-		sprite = &entity->getComponent<SpriteComponent>();
+		SDL_DestroyTexture(texture);
 	}
 
-	TransformComponent* transform;
-	SpriteComponent* sprite;
+	void draw() override
+	{
+		TextureManager::Draw(texture, srcRect, dstRect, SDL_FLIP_NONE);
+	}
 
-	SDL_Rect tileRect;
-	int tileID;
+	void update() override
+	{
+		dstRect.x = position.x - Game::camera.x;
+		dstRect.y = position.y - Game::camera.y;
+	}
 
-	const char* tileAssets[3] = { "Assets/dirt.png",
-							 "Assets/grass.png",
-							 "Assets/water.png" };
-
+public:
+	SDL_Texture* texture;
+	SDL_Rect srcRect, dstRect;
+	Vector2D position;
 };

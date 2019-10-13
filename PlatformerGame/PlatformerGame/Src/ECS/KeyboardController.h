@@ -10,6 +10,7 @@ public:
 	void init() override
 	{
 		transform = &entity->getComponent<TransformComponent>();
+		speed = Config::PLAYER_SPEED;
 	}
 
 	void update() override
@@ -29,5 +30,5 @@ public:
 	TransformComponent* transform;
 	float x = 0;
 	float y = 0;
-	float speed = 5.0f;
+	float speed;
 };

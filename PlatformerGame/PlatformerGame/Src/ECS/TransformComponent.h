@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.h"
 #include "../Vector2D.h"
+#include "../Config.h"
 
 class TransformComponent : public Component
 {
@@ -24,7 +25,7 @@ public:
 	Vector2D position;
 	Vector2D velocity;
 
-	int height = 32;
-	int width = 32;
+	int height = Config::TILE_SIZE;
+	int width = Config::TILE_SIZE;
 	int scale = 1;
 };

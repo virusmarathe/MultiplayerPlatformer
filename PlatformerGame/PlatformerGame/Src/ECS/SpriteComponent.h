@@ -55,8 +55,8 @@ public:
 			srcRect.y = animator->animIndex * transform->height;
 		}
 
-		dstRect.x = (int)transform->position.x;
-		dstRect.y = (int)transform->position.y;
+		dstRect.x = (int)transform->position.x - Game::camera.x;
+		dstRect.y = (int)transform->position.y - Game::camera.y;
 		dstRect.w = transform->width * transform->scale;
 		dstRect.h = transform->height * transform->scale;
 	}
