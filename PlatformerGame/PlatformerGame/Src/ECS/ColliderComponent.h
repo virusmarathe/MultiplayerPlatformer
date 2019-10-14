@@ -9,13 +9,10 @@ class ColliderComponent : public Component
 {
 public:
 
-	ColliderComponent(std::string s) : tag(s) { }
-
-	ColliderComponent(std::string s, int xPos, int yPos) : tag(s)
+	ColliderComponent(std::string s, int xOff, int yOff, int w, int h, bool dynamic = false) : tag(s), isDynamic(dynamic), width(w), height(h)
 	{
-		collider.x = xPos;
-		collider.y = yPos;
-		collider.w = collider.h = Config::TILE_SIZE * Config::MAP_SCALE;
+		xOffset = xOff;
+		yOffset = yOff;
 	}
 
 	void init() override
@@ -26,19 +23,22 @@ public:
 		}
 		transform = &entity->getComponent<TransformComponent>();
 
+		collider.x = (int)transform->position.x + xOffset;
+		collider.y = (int)transform->position.y + yOffset;
+		collider.w = width * transform->scale;
+		collider.h = height * transform->scale;
+
 		tex = TextureManager::LoadTexture("Assets/colTex.png");
-		srcRect = { 0, 0, Config::TILE_SIZE * Config::MAP_SCALE, Config::TILE_SIZE};
+		srcRect = { 0, 0, Config::TILE_SIZE, Config::TILE_SIZE};
 		dstRect = { collider.x, collider.y, collider.w, collider.h };
 	}
 
 	void update() override
 	{
-		if (tag != "terrain") // to be changed to static/dynamic
+		if (isDynamic)
 		{
-			collider.x = (int)transform->position.x;
-			collider.y = (int)transform->position.y;
-			collider.w = transform->width * transform->scale;
-			collider.h = transform->height * transform->scale;
+			collider.x = (int)transform->position.x + xOffset;
+			collider.y = (int)transform->position.y + yOffset;
 		}
 
 		dstRect.x = collider.x - Game::camera.x;
@@ -55,4 +55,9 @@ public:
 	TransformComponent* transform;
 	SDL_Texture* tex;
 	SDL_Rect srcRect, dstRect;
+	bool isDynamic = false;
+	int width;
+	int height;
+	int xOffset;
+	int yOffset;
 };

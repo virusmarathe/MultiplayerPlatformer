@@ -63,7 +63,7 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 				m_Player.addComponent<TransformComponent>(200.0f, 1400.0f, 4);
 				m_Player.addComponent<SpriteComponent>("Assets/player_anims.png", true);
 				m_Player.addComponent<KeyboardController>();
-				m_Player.addComponent<ColliderComponent>("player");
+				m_Player.addComponent<ColliderComponent>("player", 40, 35, 10, Config::TILE_SIZE-10, true);
 				m_Player.addGroup(groupLabels::LAYER_PLAYER);
 				m_Player.getComponent<AnimationComponent>().AddAnimation(IDLE, &idle);
 				m_Player.getComponent<AnimationComponent>().AddAnimation(WALK, &walk);
@@ -153,10 +153,10 @@ void Game::render()
 		t->draw();
 	}
 
-	/*for (auto& c : colliders)
+	for (auto& c : colliders)
 	{
 		c->draw();
-	}*/
+	}
 
 	for (auto& p : players)
 	{

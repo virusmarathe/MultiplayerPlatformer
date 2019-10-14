@@ -71,7 +71,8 @@ void Map::LoadMap(std::string path)
 			if (val != -1)
 			{
 				auto& col(manager.addEntity());
-				col.addComponent<ColliderComponent>("terrain", xPos * mapMultiplier, yPos * mapMultiplier);
+				col.addComponent<TransformComponent>(xPos * mapMultiplier, yPos * mapMultiplier, Config::MAP_SCALE);
+				col.addComponent<ColliderComponent>("terrain", 0, 0, Config::TILE_SIZE, Config::TILE_SIZE);
 				col.addGroup(Game::LAYER_COLLIDERS);
 			}
 			xPos++;
