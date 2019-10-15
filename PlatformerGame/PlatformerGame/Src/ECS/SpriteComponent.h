@@ -4,6 +4,9 @@
 #include <SDL.h>
 #include "../TextureManager.h"
 
+class TransformComponent;
+class AnimationComponent;
+
 class SpriteComponent : public Component
 {
 public:
@@ -26,40 +29,9 @@ public:
 		texture = TextureManager::LoadTexture(path);
 	}
 
-	void init() override
-	{
-		if (animated)
-		{
-			if (!entity->hasComponent<AnimationComponent>())
-			{
-				entity->addComponent<AnimationComponent>();
-			}
-			animator = &entity->getComponent<AnimationComponent>();
-		}
-		if (!entity->hasComponent<TransformComponent>())
-		{
-			entity->addComponent<TransformComponent>();
-		}
-		transform = &entity->getComponent<TransformComponent>();
+	void init() override;
 
-		srcRect.x = srcRect.y = 0;
-		srcRect.w = transform->width;
-		srcRect.h = transform->height;
-	}
-
-	void update() override
-	{
-		if (animated)
-		{
-			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / animator->timePerFrame) % animator->frames);
-			srcRect.y = animator->animIndex * transform->height;
-		}
-
-		dstRect.x = (int)transform->position.x - Game::camera.x;
-		dstRect.y = (int)transform->position.y - Game::camera.y;
-		dstRect.w = transform->width * transform->scale;
-		dstRect.h = transform->height * transform->scale;
-	}
+	void update() override;
 
 	void draw() override
 	{

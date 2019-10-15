@@ -3,6 +3,7 @@
 #include "ECS.h"
 #include <SDL.h>
 #include "../Config.h"
+#include "../Vector2D.h"
 
 class TileComponent : public Component
 {

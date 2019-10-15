@@ -5,7 +5,7 @@
 #include <vector>
 #include "Config.h"
 
-class ColliderComponent;
+class EntityManager;
 
 class Game
 {
@@ -14,6 +14,7 @@ public:
 	~Game();
 
 	void init(const char* title, int xPos, int yPos, int width, int height, bool fullscreen);
+	void setup();
 	
 	void handleEvents();
 	void update();
