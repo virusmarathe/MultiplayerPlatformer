@@ -20,10 +20,7 @@ public:
 
 	void update() override;
 
-	void doJump()
-	{
-		isJumping = true;
-	}
+	void doJump();
 
 	void restartPlayer();
 
@@ -39,8 +36,8 @@ public:
 	Animation walk = Animation(1, 8, 100);
 	bool isGrounded = false;
 	bool isJumping = false;
-	const float GRAVITY = 9.0f;
-	float timer = 0;
+	const float GRAVITY = 2000.0f;
+	double timer = 0;
 	SDL_Rect groundChecker;
 	Vector2D startPosition;
 };

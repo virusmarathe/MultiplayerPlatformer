@@ -95,12 +95,9 @@ void Game::update()
 	manager.update();
 
 	SDL_Rect playerCol = m_Player.getComponent<ColliderComponent>().collider;
-	Vector2D playerVel = m_Player.getComponent<TransformComponent>().velocity;
-	playerCol.x += playerVel.x;
-	playerCol.y += playerVel.y;
-
+	Vector2D playerVel = m_Player.getComponent<TransformComponent>().position;
 	SDL_Rect groundCheck = m_Player.getComponent<ColliderComponent>().collider;
-	groundCheck.y += Config::TILE_SIZE / 4.0f;
+	groundCheck.y += Config::TILE_SIZE / 10.0f;
 	bool onGround = false;
 	for (auto& c : colliders)
 	{

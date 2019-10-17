@@ -39,9 +39,8 @@ void PlayerComponent::update()
 
 	if (isJumping)
 	{
-		transform->velocity.y = -10.0f;
-		timer += 0.06;
-		if (timer > 1.0f)
+		timer += 1.0/Config::FPS;
+		if (timer > 0.2)
 		{
 			isJumping = false;
 		}
@@ -56,6 +55,14 @@ void PlayerComponent::update()
 	{
 		transform->acceleration.y = GRAVITY;
 	}
+}
+
+void PlayerComponent::doJump()
+{
+	isJumping = true;
+	isGrounded = false;
+	transform->acceleration.y = -3000.0f;
+	transform->velocity.y = -100.0f;
 }
 
 void PlayerComponent::restartPlayer()

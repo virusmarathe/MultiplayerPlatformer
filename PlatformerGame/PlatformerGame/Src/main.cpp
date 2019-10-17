@@ -1,12 +1,12 @@
 #include <SDL.h>
 #include "Game.h"
+#include "Config.h"
 
 Game* game = NULL;
 
 int main(int argc, char* args[])
 {
-	const int FPS = 60;
-	const int frameDelay = 1000 / FPS;
+	const int frameDelay = 1000 / Config::FPS;
 
 	Uint32 frameStart;
 	int frameTime;

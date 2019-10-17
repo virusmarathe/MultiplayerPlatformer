@@ -17,7 +17,7 @@ void KeyboardController::update()
 	//if (!state[SDL_SCANCODE_W] && !state[SDL_SCANCODE_S]) y = 0;
 	if (!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D]) x = 0;
 
-	transform->velocity = Vector2D(x, y).normalize() * speed;
+	transform->velocity.x = x * speed;
 
 	if (state[SDL_SCANCODE_W])
 	{

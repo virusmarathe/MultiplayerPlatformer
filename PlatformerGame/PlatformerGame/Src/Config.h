@@ -14,4 +14,7 @@ namespace Config
 	// SDL settings
 	extern const int WINDOW_WIDTH;
 	extern const int WINDOW_HEIGHT;
+
+	// game settings
+	extern const int FPS;
 }
